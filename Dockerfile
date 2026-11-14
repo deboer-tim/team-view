@@ -16,7 +16,10 @@ RUN CI=true pnpm install --frozen-lockfile
 # Copy source code
 COPY . .
 
-# Build the application (output is self-contained and does not need node_modules)
+# Build the application. The output is self-contained and the runtime stage does
+# not include node_modules: adapter-node bundles devDependencies into the build but
+# leaves `dependencies` as runtime imports. Any package the server code imports
+# (e.g. video.js, @monaco-editor/loader) must therefore be a devDependency.
 RUN pnpm run build
 
 # Runtime stage
